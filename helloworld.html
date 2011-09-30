@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="refresh" content="60" >
 <title>nowjs test</title>
 <link rel="stylesheet" type="text/css" href="http://mpinner.com/css/dev.mpinner.css" /> 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
@@ -27,14 +26,11 @@ $(document).ready(function()
   if (latIndex != -1) {
   message = message.substring(0,latIndex-1);
   }
-  $("#messages").prepend("<br/>" + name + ": " + message);
+  //	$("#messages").prepend("<br/>" + name + ": " + message);
   }
     
-  now.receivePhoto = function(photoUrl,keyword,name,message){
-    var addImg = '
-    <div class="picture left">  
-    <img src="' + photoUrl + '"title="'+name+':'+keyword+'" alt="'+name+':keyword+'" height="80"/>
-    <p>'+keyword+'<p></div><br/>';
+  now.receivePhoto = function(photoUrl,keyword,name){
+    var addImg = '<div class="picture left"> <img src="' + photoUrl + '" alt="'+name+':'+keyword+'" height="150"/> <br />'+name+':'+keyword+'</div>';
     $("#photo").prepend(addImg);
   }
     
@@ -181,7 +177,8 @@ function getName(minlength, maxlength, prefix, suffix)
   <body onload="initialize()">
 <div id="container">
   <div id="header">
-    <div id="current">Initializing...</div>
+    <div id="current" class="link">Initializing...</div>
+    <p>guess the photo</p>
     <div id="change-name"><a class="link">change name</a></div>
    </div>
   <div id="body">
@@ -189,12 +186,9 @@ function getName(minlength, maxlength, prefix, suffix)
     <input type="text" id="text-input" />
     <input type="button" value="Send" id="send-button" class="default" />
       <div id="map_canvas"></div>
-   <!--<div id="messages"></div-->
+   <div id="messages"></div>
     <div id="photo"></div>
     </div>
-  <!--<div id="footer">  
-    <div id="change-name"><a class="link">change name</a></div>
-  </div-->
   </div>
 </body>
 </html>
