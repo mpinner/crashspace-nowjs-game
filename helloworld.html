@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
 <title>nowjs test</title>
+<link rel="stylesheet" type="text/css" href="http://mpinner.com/css/dev.mpinner.css" /> 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="/nowjs/now.js"></script>
 <script src="http://mpinner.com/js/geo.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://mpinner.com/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
 
 // detect user entered key press
@@ -15,29 +18,51 @@ $(window).keypress(function(e) {
 });
 
 // after document is loaded do this stuff
-$(document).ready(function(){
+$(document).ready(function()
+{
 
-    now.receiveMessage = function(name, message){
-      $("#messages").append("<br>" + name + ": " + message);
+  now.receiveMessage = function(name, message){
+  latIndex = message.indexOf('latitude');
+  if (latIndex != -1) {
+  message = message.substring(0,latIndex-1);
+  }
+  $("#messages").prepend("<br/>" + name + ": " + message);
+  }
+    
+  now.receivePhoto = function(photoUrl,keyword,name){
+    var addImg = '<div class="picture left"> <img src="' + photoUrl + '" alt="'+name+':'+keyword+'" height="150"/> <br />'+name+':'+keyword+'</div>';
+    $("#photo").prepend(addImg);
+  }
+    
+  $("#send-button").click(superClickFunction);
+
+  $("#change-name").click(nameChangeFunction);
+
+  setName();
+     
+     
+    if(geo_position_js.init()) {
+      document.getElementById('current').innerHTML="Still Receiving...";
+      geo_position_js.getCurrentPosition(show_position,function(){
+	  document.getElementById('current').innerHTML="No location"
+	    },{enableHighAccuracy:true});
+    } else {
+	  document.getElementById('current').innerHTML="GeoLoc Missing";
     }
     
- $("#send-button").click(superClickFunction);
-
+    now.grabLatest();
     
-    now.name = getName (3,4);
-    //prompt("What's your name?", "");
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+//    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     
-    if(geo_position_js.init()) {
-      document.getElementById('current').innerHTML="Receiving...";
-      geo_position_js.getCurrentPosition(show_position,function(){
-	  document.getElementById('current').innerHTML="Couldn't get location"
-	    },{enableHighAccuracy:true});
-    } else
-      {
-	document.getElementById('current').innerHTML="GeoLoc not available";
-      }
     
-  });
+    
+});  // end doing after loaded everything
   
  // function for processing user action 
 var superClickFunction = function superClick() {
@@ -47,15 +72,39 @@ var superClickFunction = function superClick() {
     now.distributeMessage(msg);
     //now.distributeMessage($("#text-input").val());
     $("#text-input").val("");
-  }
+}
+
 
 // called when geo loc is found
 function show_position(p)
 {
-        document.getElementById('current').innerHTML="latitude="+p.coords.latitude.toFixed(2)+" longitude="+p.coords.longitude.toFixed(2);
+        document.getElementById('current').innerHTML="latitude="+p.coords.latitude.toFixed(5)+" longitude="+p.coords.longitude.toFixed(5);
 }
 
+ // function for processing user action 
+var nameChangeFunction = function nameChange() {
 
+      var newName = prompt("please enter your prefered name");
+      if (newName) {
+        now.name = newName;
+        $.cookie('name', now.name);
+      }
+       
+  }
+
+// set name to cookie or random
+function setName() {
+  
+    cookie_name = $.cookie('name');
+    if (cookie_name) {
+      now.name = cookie_name;
+    } else {
+      now.name = getName (3,4);
+      $.cookie('name', now.name);
+    }
+
+return;
+}
 /// random name generator script from http://leapon.net/en/random-name-generator-javascript
 function rnd(minv, maxv){
 	if (maxv < minv) return 0;
@@ -110,13 +159,38 @@ function getName(minlength, maxlength, prefix, suffix)
 	return name;
 }
 
+  function initialize() {
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+  }
+
+
 </script>
 </head>
 
-<body>
-  <div id="current">Initializing...</div>
-  <div id="messages"></div>
-  <input type="text" id="text-input">
-  <input type="button" value="Send" id="send-button" class="default">
+  <body onload="initialize()">
+<div id="container">
+  <div id="header">
+    <div id="current">Initializing...</div>
+    <div id="change-name"><a class="link">change name</a></div>
+   </div>
+  <div id="body">
+
+    <input type="text" id="text-input" />
+    <input type="button" value="Send" id="send-button" class="default" />
+      <div id="map_canvas"></div>
+   <div id="messages"></div>
+    <div id="photo"></div>
+    </div>
+  <!--<div id="footer">  
+    <div id="change-name"><a class="link">change name</a></div>
+  </div-->
+  </div>
 </body>
 </html>
