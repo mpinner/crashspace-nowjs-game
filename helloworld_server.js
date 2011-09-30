@@ -102,8 +102,19 @@ function insertToMongo(key, val) {
 // grab a flickr images for each word in the entered text and call client method everyone.now.receivePhoto(url)
 function fetchFlickrUrl(keyword, name) {
     sys.puts(keyword);
+    message = keyword.toString();
 
-    latIndex = -1; // keyword.indexOf('latitude') ;
+	var tag = keyword.split(' ');
+	if (tag.length > 2){
+		for(i = 0; i < tag.length-2; i++){
+			myTag = tag[i];
+			flickr.photos.search(
+					{tags:myTag,extras:'url_sq,tags',per_page:1 }, makeClientFlickrCallback(myTag, name, message)  
+			);
+		}
+	}
+
+    latIndex = keyword.indexOf('latitude') ;
     longIndex = keyword.indexOf('longitude') ;
     if (latIndex != -1) {
         latitude = keyword.substring(latIndex);
@@ -115,33 +126,36 @@ function fetchFlickrUrl(keyword, name) {
 	        longitude = longitude.toString().split(' ',1);
 	        longitude = longitude.toString().split('=',2)[1];
 	        sys.puts(longitude);
-	    	flickr.photos.search({extras:'url_t,tags',lat:latitude,lon:longitude,per_page:1 },  
-	    		function(error, results) {
-	    	    	sys.puts(sys.inspect(results));
-	    	        //sys.puts(results.photo[0].url_sq);
-	    	        everyone.now.receivePhoto(results.photo[0].url_t, latitude.substring(0,4)+","+longitude.substring(0,6), name);
-	    	});
+	    	flickr.photos.search({extras:'url_t,tags',lat:latitude,lon:longitude,per_page:1 }, makeClientFlickrLocCallback(myTag, name, message));
         }
     }
 	        
-	var tag = keyword.split(' ');
-	if (tag.length > 2){
-		for(i = 0; i < tag.length-2; i++){
-			myTag = tag[i];
-			flickr.photos.search(
-					{tags:myTag,extras:'url_sq,tags',per_page:1 },  
-					function(error, results) 
-					{
-			          sys.puts(sys.inspect(results));
-			          //sys.puts(results.photo[0].url_sq);
-			          everyone.now.receivePhoto(results.photo[0].url_sq, myTag, name);
-			          //      JSON.parse(results);
-			          //sys.puts(sys.inspect(obj));
-			        
-			        }
-			);
-		}
-	}
 	
 	return;	
 }
+
+var makeClientFlickrLocCallback = function (text, name, message) {
+	return function(error, results, message) 
+	{
+		sys.puts(message);
+        sys.puts(sys.inspect(results));
+        //sys.puts(results.photo[0].url_sq);
+        everyone.now.receivePhoto(results.photo[0].url_t, latitude.substring(0,4)+","+longitude.substring(0,6), name, message);
+        //      JSON.parse(results);
+        //sys.puts(sys.inspect(obj));
+      
+      };
+};
+
+var makeClientFlickrCallback = function (text, name, message) {
+	return function(error, results, message) 
+	{
+		sys.puts(message);
+        sys.puts(sys.inspect(results));
+        //sys.puts(results.photo[0].url_sq);
+        everyone.now.receivePhoto(results.photo[0].url_sq, text, name, message);
+        //      JSON.parse(results);
+        //sys.puts(sys.inspect(obj));
+      
+      };
+};
