@@ -1,18 +1,72 @@
 an entry for the nowJs hackathon: http://nowjs.com/rtt
 proj page here: http://crashspace.pbworks.com/w/page/45570359/NowJS%20HackAThon
-
-In theory, NowJS makes realtime we apps easy: http://www.nowjs.org/
+if you wish to play along start here: https://dev.mpinner.org:8080
 
 How easy? We will see. None of us have used NowJS, node.js, or even written a game. This will primarily be a creative learning effort, but with a timeline... go us.
 
-if you wish to play along start here: https://github.com/Flotype/now
+
+//// Build Install:
+
+## build node
+cd ~/dev/
+git clone https://github.com/joyent/node.git
+cd node
+./configure
+make
+sudo make install
+
+## build npm
+cd ~/dev/
+curl http://npmjs.org/install.sh | sudo sh 
+
+## add project dir
+cd /var/lib
+sudo mkdir test
+sudo chown ec2-user:ec2-user test
+cd test/
+
+## add other dependencies
+npm install now
+npm install http-server -g
+npm install mongodb
+
+## add flickr libs
+git clone https://github.com/ciaranj/flickrnode.git
+cp -r flickrnode/lib node_modules
+
+
+## install and run mongo
+sudo mkdir /var/lib/mongodb
+  sudo chown ec2-user:ec2-user /var/lib/mongodb/
+  cd /var/lib/mongodb/
+ curl http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.0.0.tgz  > mongo.tgz
+tar -xzf mongo.tgz
+cd ~/dev/tools/mongodb-osx-i386-2.0.0/
+mkdir -p data/db
+./bin/mongod
+
+## test mongo with cmd line client and queries
+~/dev/tools/mongodb-osx-i386-2.0.0/bin/mongo
+db.test_collection.find()
+
+##run
+cd /var/lib/test
+node hello
+
+
+//// Release Notes:
+
+-- 2011-09-29
+added more/less messaging, fun, and play tested
 
 -- 2011-09-29
 added flickr api calls
-added fetching from mongo
+added fetching from mongo on initial load
 
 -- 2011-09-21
 added mongo db persistence
 
 -- 2011-09-20
 added geoloc
+
+
