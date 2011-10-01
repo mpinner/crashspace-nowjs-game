@@ -1,8 +1,66 @@
-an entry for the nowJs hackathon: http://nowjs.com/rtt
-proj page here: http://crashspace.pbworks.com/w/page/45570359/NowJS%20HackAThon
-if you wish to play along start here: https://dev.mpinner.org:8080
+//// PLAY IT ! 
 
-How easy? We will see. None of us have used NowJS, node.js, or even written a game. This will primarily be a creative learning effort, but with a timeline... go us.
+http://dev.mpinner.com:8080
+ 
+
+//// What is this?
+
+NowJS makes realtime we apps easy: http://www.nowjs.org/
+
+How easy? Pretty easy. None of us had used NowJS, node.js, or even written a game. This was primarily a creative learning effort, but with a timeline... go us.
+
+try it: http://dev.mpinner.com:8080
+team: @crashspacela
+point of contact: Matt Pinner and other collaborators
+hosts, rules, and terms: http://nowjs.com/rtt
+goals: learning nowjs and winning shirts
+code: https://github.com/mpinner/crashspace-nowjs-game
+
+
+//// Game Design
+ 
+Introduction
+The goal of this game is to get the same picture twice in a row before your friends beat you to it!
+
+Abstract
+Start the game with the word of your choice, and see what Flickr feels best represents it!  The next word you (or your friends!) input is the first word that comes to mind upon seeing the image.  If the image you get for this second word matches the first, YOU WIN!  (Writing the same word twice is cheating! So don't cheat, you cheating cheater, you!)
+
+Target Audience
+ALL OF YOUR BESTEST FRIENDS
+
+Platform
+Web, Mobile
+
+Unique Selling Points
+*Being based upon Flickr's tagging system, this game works in all languages supported by Flickr!  (AKA, SO MANY LANGUAGES!)
+*The game utilized NowJS's unique multi-threading capabilities, so multiple friends can play together at once.
+
+Game Mechanics
+Choose a username (or be supplied one at random), enter a word, and attempt to guess the other tags associated with the image.
+
+Controls
+Textbox!  Keepin' it old school.
+
+Scoring
+Points are awarded for each tag you guess that yields the previous image.
+
+Win Conditions
+Generate the same photo twice with two separate words by guessing multiple tags on the image, based on its content.
+
+Lose Conditions
+Don't win.
+
+Level Design
+Speed is the name of the game!  Guess the tags before your friends can.  
+
+Story
+Free association is fun. Everyone sees images differently, and recalls different memories after seeing them. try to guess what people were thinking when posting their photos.
+
+Players
+Anyone with access to the game.  
+
+Visual Style
+Plain and simple, mobile and browser accessible.
 
 
 //// Build Install:
@@ -55,18 +113,17 @@ node hello
 
 
 //// Release Notes:
-
+-- 2011-09-30
+  finalize and submit
 -- 2011-09-29
-added more/less messaging, fun, and play tested
-
+  added more/less messaging, fun, and play tested
+  fixed shared memory callback issue
 -- 2011-09-29
-added flickr api calls
-added fetching from mongo on initial load
-
+  added flickr api calls
+  added fetching from mongo on initial load
 -- 2011-09-21
-added mongo db persistence
-
+  added mongo db persistence
 -- 2011-09-20
-added geoloc
+  added geoloc
 
 
